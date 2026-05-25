@@ -1,0 +1,7 @@
+# MyPrivateSpace
+
+> MyPrivateSpace is a private cloud notebook for capturing notes, checklists, scanned text and ideas — organized with colors and labels, searchable instantly, and synced across devices.
+
+## Pages
+
+- [Home](/): Sign in to capture and organize your private notes, checklists and scanned ideas.

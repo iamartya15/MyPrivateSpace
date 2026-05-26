@@ -29,7 +29,7 @@ export function useAuth() {
 
     // Listen to storage changes (for login from other tabs/windows)
     window.addEventListener("storage", checkUser);
-    
+
     // Custom event for same-tab updates
     window.addEventListener("auth-change", checkUser);
 

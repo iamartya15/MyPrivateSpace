@@ -2,8 +2,18 @@ import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/hooks/use-auth";
 
 export type NoteColor =
-  | "default" | "red" | "orange" | "yellow" | "green"
-  | "teal" | "blue" | "darkblue" | "purple" | "pink" | "brown" | "gray";
+  | "default"
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "blue"
+  | "darkblue"
+  | "purple"
+  | "pink"
+  | "brown"
+  | "gray";
 
 export type ChecklistItem = { id: string; text: string; done: boolean };
 
@@ -54,13 +64,15 @@ const seed = (): Note[] => {
     {
       id: crypto.randomUUID(),
       title: "Welcome to MyPrivateSpace",
-      content: "**Bold**, *italic*, and `code` work with markdown!\n\n# Headers\n## Subheaders\n\n- Lists\n- Tables\n- Links: [[Other note]]\n\nAttach files, lock private notes 🔒, and sort however you like.",
+      content:
+        "**Bold**, *italic*, and `code` work with markdown!\n\n# Headers\n## Subheaders\n\n- Lists\n- Tables\n- Links: [[Other note]]\n\nAttach files, lock private notes 🔒, and sort however you like.",
       color: "green",
       pinned: true,
       archived: false,
       trashed: false,
       labels: ["Inspiration"],
-      createdAt: now, updatedAt: now,
+      createdAt: now,
+      updatedAt: now,
     },
     {
       id: crypto.randomUUID(),
@@ -72,9 +84,12 @@ const seed = (): Note[] => {
         { id: crypto.randomUUID(), text: "Bread", done: false },
       ],
       color: "blue",
-      pinned: false, archived: false, trashed: false,
+      pinned: false,
+      archived: false,
+      trashed: false,
       labels: [],
-      createdAt: now - 1000, updatedAt: now - 1000,
+      createdAt: now - 1000,
+      updatedAt: now - 1000,
     },
   ];
 };
@@ -90,7 +105,9 @@ function load(userEmail: string): Note[] {
       return s;
     }
     return JSON.parse(raw);
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 function save(userEmail: string, notes: Note[]) {
@@ -103,36 +120,43 @@ function loadSettings(userEmail: string): Settings {
     const raw = localStorage.getItem(getSettingsKey(userEmail));
     if (!raw) return DEFAULT_SETTINGS;
     return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-  } catch { return DEFAULT_SETTINGS; }
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
 }
 
 export function useSettings() {
   const { user } = useAuth();
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
-  
+
   useEffect(() => {
     if (!user?.email) return;
     setSettings(loadSettings(user.email));
     setReady(true);
   }, [user?.email]);
-  
-  const update = useCallback((patch: Partial<Settings>) => {
-    if (!user?.email) return;
-    setSettings(prev => {
-      const next = { ...prev, ...patch };
-      localStorage.setItem(getSettingsKey(user.email), JSON.stringify(next));
-      return next;
-    });
-  }, [user?.email]);
-  
+
+  const update = useCallback(
+    (patch: Partial<Settings>) => {
+      if (!user?.email) return;
+      setSettings((prev) => {
+        const next = { ...prev, ...patch };
+        localStorage.setItem(getSettingsKey(user.email), JSON.stringify(next));
+        return next;
+      });
+    },
+    [user?.email],
+  );
+
   return { settings, ready, update };
 }
 
 export async function hashPassword(password: string): Promise<string> {
   const enc = new TextEncoder().encode(password);
   const buf = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export function useNotes() {
@@ -157,8 +181,8 @@ export function useNotes() {
     const settings = loadSettings(user.email);
     if (settings.autoEmptyDays <= 0) return;
     const cutoff = Date.now() - settings.autoEmptyDays * 86400000;
-    setNotes(prev => {
-      const filtered = prev.filter(n => !(n.trashed && (n.trashedAt ?? n.updatedAt) < cutoff));
+    setNotes((prev) => {
+      const filtered = prev.filter((n) => !(n.trashed && (n.trashedAt ?? n.updatedAt) < cutoff));
       return filtered.length === prev.length ? prev : filtered;
     });
   }, [ready, user?.email]);
@@ -166,21 +190,23 @@ export function useNotes() {
   const addNote = useCallback((n: Omit<Note, "id" | "createdAt" | "updatedAt">) => {
     const now = Date.now();
     const note: Note = { ...n, id: crypto.randomUUID(), createdAt: now, updatedAt: now };
-    setNotes(prev => [note, ...prev]);
+    setNotes((prev) => [note, ...prev]);
     return note;
   }, []);
 
   const updateNote = useCallback((id: string, patch: Partial<Note>) => {
-    setNotes(prev => prev.map(n => {
-      if (n.id !== id) return n;
-      const next = { ...n, ...patch, updatedAt: Date.now() };
-      if (patch.trashed && !n.trashed) next.trashedAt = Date.now();
-      return next;
-    }));
+    setNotes((prev) =>
+      prev.map((n) => {
+        if (n.id !== id) return n;
+        const next = { ...n, ...patch, updatedAt: Date.now() };
+        if (patch.trashed && !n.trashed) next.trashedAt = Date.now();
+        return next;
+      }),
+    );
   }, []);
 
   const removeNote = useCallback((id: string) => {
-    setNotes(prev => prev.filter(n => n.id !== id));
+    setNotes((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
   return { notes, ready, addNote, updateNote, removeNote };

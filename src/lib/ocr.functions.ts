@@ -16,9 +16,7 @@ export const ocrImage = createServerFn({ method: "POST" })
       return { text };
     } catch (error) {
       throw new Error(
-        error instanceof Error
-          ? error.message
-          : "OCR processing failed. Try a clearer image."
+        error instanceof Error ? error.message : "OCR processing failed. Try a clearer image.",
       );
     }
   });

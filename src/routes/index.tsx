@@ -150,11 +150,17 @@ function NotesApp({ signOut, userEmail }: { signOut: () => void; userEmail: stri
         {!ready ? (
           <p className="text-sm text-muted-foreground">Loading your notes...</p>
         ) : filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No notes yet. Create your first note above.</p>
+          <p className="text-sm text-muted-foreground">
+            No notes yet. Create your first note above.
+          </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((note) => (
-              <NoteCard key={note.id} note={note} onTrash={() => updateNote(note.id, { trashed: true })} />
+              <NoteCard
+                key={note.id}
+                note={note}
+                onTrash={() => updateNote(note.id, { trashed: true })}
+              />
             ))}
           </div>
         )}
@@ -176,7 +182,9 @@ function NoteCard({ note, onTrash }: { note: Note; onTrash: () => void }) {
           Trash
         </button>
       </div>
-      <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">{note.content}</p>
+      <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">
+        {note.content}
+      </p>
     </article>
   );
 }

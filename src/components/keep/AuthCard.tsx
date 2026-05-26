@@ -80,9 +80,7 @@ export function AuthCard() {
         <h2 className="font-display text-2xl font-medium">
           {isSignup ? "Create your account" : "Welcome back"}
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Sign in to access your private notes
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">Sign in to access your private notes</p>
       </div>
 
       {canUseGoogle ? (
@@ -135,22 +133,14 @@ export function AuthCard() {
           onClick={() => setIsSignup((s) => !s)}
           className="w-full text-center text-xs text-muted-foreground hover:text-foreground"
         >
-          {isSignup
-            ? "Already have an account? Sign in"
-            : "Don't have an account? Sign up"}
+          {isSignup ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
         </button>
       </form>
     </div>
   );
 }
 
-function Field({
-  icon,
-  children,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
+function Field({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3 rounded-lg border border-input bg-background px-3 py-2.5 focus-within:border-primary">
       <span className="text-muted-foreground">{icon}</span>

@@ -22,7 +22,7 @@ function Nav({ view, onChange }: { view: View; onChange: (v: View) => void }) {
             onClick={() => onChange(key)}
             className={cn(
               "group flex w-full items-center gap-6 rounded-r-full py-3 pl-6 pr-6 text-sm font-medium transition-colors",
-              active ? "bg-accent text-accent-foreground" : "hover:bg-hover text-foreground"
+              active ? "bg-accent text-accent-foreground" : "hover:bg-hover text-foreground",
             )}
           >
             <Icon className="h-5 w-5 shrink-0" />
@@ -42,12 +42,25 @@ export function Sidebar({ view, onChange }: { view: View; onChange: (v: View) =>
   );
 }
 
-export function MobileSidebar({ open, onOpenChange, view, onChange }: { open: boolean; onOpenChange: (o: boolean) => void; view: View; onChange: (v: View) => void }) {
+export function MobileSidebar({
+  open,
+  onOpenChange,
+  view,
+  onChange,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  view: View;
+  onChange: (v: View) => void;
+}) {
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 md:hidden" onClick={() => onOpenChange(false)}>
-      <div className="h-full w-[280px] bg-background p-0" onClick={(event) => event.stopPropagation()}>
+      <div
+        className="h-full w-[280px] bg-background p-0"
+        onClick={(event) => event.stopPropagation()}
+      >
         <Nav
           view={view}
           onChange={(v) => {

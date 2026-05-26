@@ -1,6 +1,7 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-// Redirect TanStack Start's bundled server entry to src/server.ts
+const isProductionBuild = process.env.NODE_ENV === "production";
+
 export default defineConfig({
   tanstackStart: {
     server: {
@@ -9,6 +10,6 @@ export default defineConfig({
   },
 
   vite: {
-    base: "/MyPrivateSpace/",
+    base: isProductionBuild ? "/MyPrivateSpace/" : "/",
   },
 });

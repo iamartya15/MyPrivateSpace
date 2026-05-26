@@ -1,58 +1,59 @@
-# MyPrivateSpace 🔐
+# MyPrivateSpace
 
-A completely **private**, **offline-first** notes app with:
+React + Vite + TanStack Router app configured for GitHub Pages deployment.
 
-✅ **Email/Password Auth** - localStorage-based, no cloud  
-✅ **Google OAuth** - Optional single-sign-on  
-✅ **Camera Capture** - Instant photo notes  
-✅ **OCR (Tesseract.js)** - Extract text from images  
-✅ **100% Private** - Each user's data is completely isolated  
-✅ **No Backend** - Everything runs locally in your browser  
-
-## Features
-
-- 📝 Rich markdown notes with formatting
-- 🎨 Color-coded notes
-- 📌 Pin important notes  
-- 🗑️ Trash with auto-empty
-- 🔒 Lock notes with password
-- 📷 Camera capture with OCR
-- ☑️ Checklists
-- 🏷️ Labels & tags
-- 🔍 Full-text search
-- 📱 Mobile-friendly UI
-
-## Privacy
-
-**Your data is yours:**
-- Each user gets separate localStorage storage
-- No cloud sync (unless you add it)
-- No tracking, no analytics
-- All computation happens in your browser
-
-## Tech Stack
-
-- **React 19** - UI framework
-- **TanStack Router** - Client-side routing
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **Tesseract.js** - OCR
-- **Google OAuth** - Authentication
-- **localStorage** - Data persistence
-
-## Getting Started
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Visit `http://localhost:8080`
+- Vite default URL: `http://localhost:5173`
+- Optional alternate URL supported in OAuth provider settings: `http://localhost:8080`
 
-## Deployment
+## Environment variables
 
-Deployed on GitHub Pages: [MyPrivateSpace Live](https://iamartya15.github.io/MyPrivateSpace)
+Copy `.env.example` to `.env` and fill values:
 
-## Privacy First!
+```bash
+cp .env.example .env
+```
 
-No servers. No databases. No tracking. Pure offline privacy. ✅
+Required:
+
+- `VITE_GOOGLE_CLIENT_ID`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+Never commit `.env` or any private service-role/database secrets.
+
+## Build and preview
+
+```bash
+npm run build
+npm run preview
+```
+
+For GitHub Pages fallback testing:
+
+```bash
+npm run build:pages
+```
+
+## GitHub Pages deployment
+
+The repository uses `.github/workflows/deploy.yml`:
+
+- builds on push to `main`
+- uploads `dist` artifact
+- deploys through GitHub Pages
+- generates `dist/404.html` for SPA refresh fallback
+
+Set repository secrets:
+
+- `VITE_GOOGLE_CLIENT_ID`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+Live URL: `https://iamartya15.github.io/MyPrivateSpace/`

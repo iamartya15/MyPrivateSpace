@@ -10,6 +10,7 @@ import {
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import appCss from "../styles.css?url";
+import { env, getAppUrl } from "@/lib/env";
 
 function NotFoundComponent() {
   return (
@@ -57,7 +58,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             Try again
           </button>
           <a
-            href="/"
+            href={getAppUrl()}
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Go home
@@ -69,29 +70,57 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MyPrivateSpace" },
-      { name: "description", content: "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device." },
-      { property: "og:site_name", content: "MyPrivateSpace" },
-      { property: "og:title", content: "MyPrivateSpace" },
-      { property: "og:description", content: "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "MyPrivateSpace" },
-      { name: "twitter:description", content: "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/8L2yVavKmvQ0XWrUIvRm7r6HW772/social-images/social-1779694086494-61m5H1fYccL._AC_UF1000,1000_QL80_.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/8L2yVavKmvQ0XWrUIvRm7r6HW772/social-images/social-1779694086494-61m5H1fYccL._AC_UF1000,1000_QL80_.webp" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
+  head: () => {
+    const appUrl = getAppUrl();
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "MyPrivateSpace" },
+        {
+          name: "description",
+          content:
+            "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device.",
+        },
+        { property: "og:site_name", content: "MyPrivateSpace" },
+        { property: "og:title", content: "MyPrivateSpace" },
+        {
+          property: "og:description",
+          content:
+            "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: appUrl },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:title", content: "MyPrivateSpace" },
+        {
+          name: "twitter:description",
+          content:
+            "MyPrivateSpace is your private cloud notebook — capture notes, checklists, scanned text and ideas, then find them instantly across every device.",
+        },
+        {
+          property: "og:image",
+          content:
+            "https://storage.googleapis.com/gpt-engineer-file-uploads/8L2yVavKmvQ0XWrUIvRm7r6HW772/social-images/social-1779694086494-61m5H1fYccL._AC_UF1000,1000_QL80_.webp",
+        },
+        {
+          name: "twitter:image",
+          content:
+            "https://storage.googleapis.com/gpt-engineer-file-uploads/8L2yVavKmvQ0XWrUIvRm7r6HW772/social-images/social-1779694086494-61m5H1fYccL._AC_UF1000,1000_QL80_.webp",
+        },
+      ],
+      links: [
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        {
+          rel: "canonical",
+          href: appUrl,
+        },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -114,13 +143,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-  return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-      </QueryClientProvider>
-    </GoogleOAuthProvider>
+  const googleClientId = env.googleClientId;
+  const content = (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+    </QueryClientProvider>
   );
+
+  if (!googleClientId) {
+    return content;
+  }
+
+  return <GoogleOAuthProvider clientId={googleClientId}>{content}</GoogleOAuthProvider>;
 }

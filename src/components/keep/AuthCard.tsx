@@ -4,6 +4,12 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { env } from "@/lib/env";
+
+type GoogleJwtPayload = {
+  email?: string;
+  name?: string;
+};
 
 export function AuthCard() {
   const { setUser } = useAuth();
@@ -12,17 +18,24 @@ export function AuthCard() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const canUseGoogle = Boolean(env.googleClientId);
+
   const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
     try {
       if (!credentialResponse.credential) {
         toast.error("Google authentication failed");
         return;
       }
-      const decoded: any = jwtDecode(credentialResponse.credential);
+      const decoded = jwtDecode<GoogleJwtPayload>(credentialResponse.credential);
+
+      if (!decoded.email) {
+        toast.error("Google account email is unavailable");
+        return;
+      }
+
       const user = { id: decoded.email, email: decoded.email };
-      localStorage.setItem("auth_user", JSON.stringify(user));
-      setUser?.(user);
-      toast.success(`Welcome ${decoded.name}!`);
+      setUser(user);
+      toast.success(decoded.name ? `Welcome ${decoded.name}!` : "Welcome!");
     } catch (error) {
       toast.error("Failed to process Google login");
     }
@@ -43,8 +56,7 @@ export function AuthCard() {
         }
         localStorage.setItem(key, password);
         const newUser = { id: email, email };
-        localStorage.setItem("auth_user", JSON.stringify(newUser));
-        setUser?.(newUser);
+        setUser(newUser);
         toast.success("Account created!");
       } else {
         if (!stored || stored !== password) {
@@ -52,8 +64,7 @@ export function AuthCard() {
           return;
         }
         const user = { id: email, email };
-        localStorage.setItem("auth_user", JSON.stringify(user));
-        setUser?.(user);
+        setUser(user);
         toast.success("Welcome back!");
       }
     } finally {
@@ -74,16 +85,20 @@ export function AuthCard() {
         </p>
       </div>
 
-      <div className="mb-4">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => toast.error("Google login failed")}
-        />
-      </div>
+      {canUseGoogle ? (
+        <div className="mb-4">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => toast.error("Google login failed")}
+          />
+        </div>
+      ) : null}
 
-      <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
-        <div className="h-px flex-1 bg-border" /> OR <div className="h-px flex-1 bg-border" />
-      </div>
+      {canUseGoogle ? (
+        <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="h-px flex-1 bg-border" /> OR <div className="h-px flex-1 bg-border" />
+        </div>
+      ) : null}
 
       <form onSubmit={handleAuth} className="space-y-3">
         <Field icon={<Mail className="h-4 w-4" />}>

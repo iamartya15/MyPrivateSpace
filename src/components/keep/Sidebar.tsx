@@ -1,5 +1,4 @@
 import { Lightbulb, Bell, Tag, Archive, Trash2 } from "lucide-react";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 export type View = "notes" | "reminders" | "labels" | "archive" | "trash";
@@ -44,11 +43,19 @@ export function Sidebar({ view, onChange }: { view: View; onChange: (v: View) =>
 }
 
 export function MobileSidebar({ open, onOpenChange, view, onChange }: { open: boolean; onOpenChange: (o: boolean) => void; view: View; onChange: (v: View) => void }) {
+  if (!open) return null;
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="w-[280px] p-0">
-        <Nav view={view} onChange={(v) => { onChange(v); onOpenChange(false); }} />
-      </SheetContent>
-    </Sheet>
+    <div className="fixed inset-0 z-50 bg-black/40 md:hidden" onClick={() => onOpenChange(false)}>
+      <div className="h-full w-[280px] bg-background p-0" onClick={(event) => event.stopPropagation()}>
+        <Nav
+          view={view}
+          onChange={(v) => {
+            onChange(v);
+            onOpenChange(false);
+          }}
+        />
+      </div>
+    </div>
   );
 }

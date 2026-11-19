@@ -1,58 +1,37 @@
 # MyPrivateSpace 🔐
 
-A completely **private**, **offline-first** notes app with:
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![Tesseract.js](https://img.shields.io/badge/OCR-Tesseract.js-orange)
 
-✅ **Email/Password Auth** - localStorage-based, no cloud  
-✅ **Google OAuth** - Optional single-sign-on  
-✅ **Camera Capture** - Instant photo notes  
-✅ **OCR (Tesseract.js)** - Extract text from images  
-✅ **100% Private** - Each user's data is completely isolated  
-✅ **No Backend** - Everything runs locally in your browser  
+A completely **private**, **offline-first** notes app. No backend, no cloud database — everything runs locally in your browser, and each user's data stays isolated on their own device.
 
-## Features
+## ✨ Features
 
 - 📝 Rich markdown notes with formatting
-- 🎨 Color-coded notes
-- 📌 Pin important notes  
+- 🎨 Color-coded notes, 📌 pinning, 🏷️ labels & tags
+- ☑️ Checklists and 🔍 full-text search
+- 📷 **Camera capture** — snap a photo and save it as a note
+- 🔤 **OCR (Tesseract.js)** — extract text from images automatically
+- 🔒 Lock individual notes with a password
 - 🗑️ Trash with auto-empty
-- 🔒 Lock notes with password
-- 📷 Camera capture with OCR
-- ☑️ Checklists
-- 🏷️ Labels & tags
-- 🔍 Full-text search
-- 📱 Mobile-friendly UI
 
-## Privacy
+## 🔐 Privacy & Auth
 
-**Your data is yours:**
-- Each user gets separate localStorage storage
-- No cloud sync (unless you add it)
-- No tracking, no analytics
-- All computation happens in your browser
+- ✅ **Email/Password auth** — localStorage-based, no cloud account needed
+- ✅ **Google OAuth** — optional single sign-on
+- ✅ **100% private** — notes never leave the device; there is no server to leak them
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **React 19** - UI framework
-- **TanStack Router** - Client-side routing
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **Tesseract.js** - OCR
-- **Google OAuth** - Authentication
-- **localStorage** - Data persistence
+React · TypeScript · Vite · Tailwind CSS · Radix UI · Tesseract.js · Google OAuth (`@react-oauth/google`)
 
-## Getting Started
+## 🚀 Getting Started
 
 ```bash
-npm install
-npm run dev
+npm install     # install dependencies
+npm run dev     # start the development server
+npm run build   # production build
+npm run preview # preview the production build
 ```
-
-Visit `http://localhost:8080`
-
-## Deployment
-
-Deployed on GitHub Pages: [MyPrivateSpace Live](https://iamartya15.github.io/MyPrivateSpace)
-
-## Privacy First!
-
-No servers. No databases. No tracking. Pure offline privacy. ✅
